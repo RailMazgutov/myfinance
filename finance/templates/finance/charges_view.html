@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Table Page</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/css/materialize.min.css">
+</head>
+<body>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js"></script>
+    <div class="container">
+    <h2>Все транзакции по вашему счету</h2>
+        <table class="bordered highlight" >
+            <thead>
+                <tr>
+                    <th class="green white-text">Транзакции</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for charge in account %}
+                <tr>
+                   <td>{{ charge.value }}</td>
+                </tr>
+                {% endfor %}
+                <tr>
+                   <td class="orange white-text">Итого {{ account.total }}</td>
+                </tr>
+            </tbody>
+
+        </table>
+    <p>Вернуться на <a href="{% url 'finance:main' %}">главную</a>.</p>
+    </div>
+</body>
+</html>
