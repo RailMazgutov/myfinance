@@ -1,5 +1,5 @@
 from django.db import models
-
+from datetime import date
 # Create your models here.
 
 
@@ -30,17 +30,21 @@ class Account(models.Model):
 
 class Charge(models.Model):
     _value = models.DecimalField(max_digits=8, decimal_places=2)
-    _account = models.ForeignKey('Account', related_name="charges")
+    _date = models.DateField()
 
     @classmethod
-    def create(cls, account, value=0):
-        charge = cls(_value=round(value, 2), _account=account)
+    def create(cls, Value=0, Date = date.today()):
+        charge = cls(_value=round(Value, 2), _date = Date)
         charge.save()
         return charge
 
     @property
     def value(self):
         return self._value
+
+    @property
+    def date(self):
+        return self._date
 
 
 
