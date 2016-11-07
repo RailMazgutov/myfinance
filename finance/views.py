@@ -3,7 +3,7 @@ from datetime import date
 from decimal import Decimal
 from .models import Account, Charge
 from random import randint
-from .models import Account
+from .forms import ChargeForm
 # Create your views here.
 
 
@@ -36,7 +36,15 @@ def charges(request):
         charge = Charge.create(Value, Date)
         charges.append(charge)
 
+    if request.method == "POST":
+        form = ChargeForm(request.POST)
+        if form.is_valid():
+            pass
+        # Не сохраняю в БД.
+    else:
+        form = ChargeForm()
+
     return render(request,
                   'finance/charges_view.html',
-                  {"charges": charges, "positive" : positive, "negative" : negative})
+                  {"charges": charges, "positive" : positive, "negative" : negative, 'form': form})
 
