@@ -3,7 +3,7 @@ from datetime import date
 from decimal import Decimal
 from .models import Account, Charge
 from random import randint
-from .forms import ChargeForm
+from .forms import ChargeForm, AccountForm
 # Create your views here.
 
 
@@ -21,30 +21,32 @@ def random_transactions( ):
         yield random_date, random_value
 
 
-def main(request):
-    return render(request, 'finance/main.html')
 
 
-def charges(request):
-    charges = []
-    positive = 0
-    negative = 0
-    for i in range(25):
-        Date, Value = random_transactions().__next__()
-        if Value > 0 : positive+= Value
-        else : negative+= Value
-        charge = Charge.create(Value, Date)
-        charges.append(charge)
+def accounts(request):
+    if request.method == "POST":
+        form = AccountForm(request.POST)
+        if form.is_valid():
+            account = form.save(commit=False)
+            account.save()
+    else:
+        form = AccountForm()
 
+    return render(request,
+                  'finance/accounts_view.html',
+                  {"accounts": Account.objects.all(), 'form': form})
+
+
+def account_details(request, pk):
+    account = Account.objects.get(pk=pk)
     if request.method == "POST":
         form = ChargeForm(request.POST)
         if form.is_valid():
-            pass
-        # Не сохраняю в БД.
+            charge = form.save(commit=False)
+            account.add_charge(charge)
     else:
         form = ChargeForm()
 
     return render(request,
-                  'finance/charges_view.html',
-                  {"charges": charges, "positive" : positive, "negative" : negative, 'form': form})
-
+                  'finance/account_details_view.html',
+                  {'form': form, 'account': account})

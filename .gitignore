@@ -47,3 +47,4 @@ Temporary Items
 .apdisk
 .idea/vcs.xml
 .idea/workspace.xml
+finance/migrations/*
