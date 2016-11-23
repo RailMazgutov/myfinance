@@ -47,6 +47,23 @@ def account_details(request, pk):
     else:
         form = ChargeForm()
 
+    charges = account.charges
+    months = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль',
+              'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь']
+    curr_year = date.today().year
+    statistics = []
+    for month in range(1, 13):
+        month_charges = charges.filter(_date__month=month, _date__year=curr_year).all()
+        income = 0
+        outcome = 0
+        for charge in month_charges:
+            if charge.value > 0:
+                income += charge.value
+            else:
+                outcome += charge.value
+
+        statistic = {'month': months[month - 1], 'income': income, 'outcome': outcome}
+        statistics.append(statistic)
     return render(request,
                   'finance/account_details_view.html',
-                  {'form': form, 'account': account})
+                  {'form': form, 'account': account, 'statistics': statistics})
