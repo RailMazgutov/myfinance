@@ -59,16 +59,16 @@
             for ( i = 0; i < statistics.length; i++ ){
                 var month = $(statistics[i]).data("month");
                 var income = $(statistics[i]).data("income");
-                if (income.length == 1) {
-                    income = +income;
-                } else {
+                if (income) {
                     income = parseFloat(income.replace(/[,]+/g, '.'));
+                } else {
+                    income = 0;
                 }
                 var outcome = $(statistics[i]).data("outcome");
-                if (outcome.length == 1) {
-                    outcome = +outcome;
-                } else {
+                if (outcome) {
                     outcome = -parseFloat(outcome.replace(/[,]+/g, '.'));
+                } else {
+                    outcome = 0;
                 }
                 //outcome = parseFloat(outcome.substring(1, outcome.length - 1).replace(/[,]+/g, '.'));
                 var statistic = { month: month, income: income, outcome: outcome };
