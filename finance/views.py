@@ -33,7 +33,7 @@ def accounts(request):
         form = AccountForm()
 
     return render(request,
-                  'finance/accounts_view.html',
+                  'finance/index.html',
                   {"accounts": Account.objects.all(), 'form': form})
 
 

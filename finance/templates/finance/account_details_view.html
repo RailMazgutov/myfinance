@@ -85,7 +85,11 @@
                 ykeys: ['income', 'outcome'],
                 // Labels for the ykeys -- will be displayed when you hover over the
                 // chart.
-                labels: ['Доход', 'Расход']
+                labels: ['Доход', 'Расход'],
+                barColors : function (row, series, type) {
+                    if(series.key == 'income') return "#00C853";
+                    else if(series.key == 'outcome') return "#E65100";
+                }
             });
         });
 
