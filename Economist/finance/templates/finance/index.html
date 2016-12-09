@@ -1,0 +1,313 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Economist</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/css/materialize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js"></script>
+    <nav>
+        <div class="nav-wrapper  blue darken-1">
+            <a href="#" class="brand-logo" style="left: 30px">Economist</a>
+            <ul id="nav-mobile" class="right hide-on-med-and-down">
+                <li><a href="">Стоимость</a></li>
+                <li><a href="">Премиум</a></li>
+                <li><a href="" id="login_link">Войти</a></li>
+                <li><a href="" id="reg_link"><b>Зарегистрироваться</b></a></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="enter-point" style="position:relative;">
+        <div class="parallax-container"  style="height: 700px">
+            <div class="parallax"><img src="{% static "finance/index_parallax.jpg" %}"></div>
+        </div>
+        <div class="enter-text" style="position: absolute;
+                                        top: 200px;
+                                        margin-left: 150px;">
+            <h3 class="white-text">Экономьте больше<br> каждый день</h3>
+            <p class="white-text">Миллионы людей доверяют нам<br> контроль над своими финансами каждый день</p>
+            <a class="waves-effect waves-light btn blue darken-1">НАЧНИТЕ - ЭТО БЕСПЛАТНО</a>
+        </div>
+    </div>
+
+    <div class="container" style="margin-top: 5%; margin-bottom: 5%">
+        <div class="row">
+            <div class="col s6 offset-s3 center-align">
+                <h3 class="promo-caption">Тратьте деньги с умом.</h3>
+                <p class="light center">Economist предлагает средства для анализа финансов, что поможет вам оптимизировать расходы.</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s4 center-align">
+                <i class="large material-icons blue-text">wifi</i>
+                <p class="promo-caption">Доступен всюду</p>
+                <p class="light center">Вы можете просматривать состояние своего счета и изменять баланс с любого устройства с доуступом в интернет.</p>
+
+            </div>
+            <div class="col s4 center-align">
+                <i class="large material-icons blue-text">view_week</i>
+                <p class="promo-caption">Разделение счетов</p>
+                <p class="light center">Разделяйте свой бюджет на счета, мы поможем вам следить за каждым из них.</p>
+            </div>
+            <div class="col s4 center-align">
+                <i class="large material-icons blue-text">timeline</i>
+                <p class="promo-caption">Подроная статистика</p>
+                <p class="light center">Подробная статистика изменения баланса поможет вам следить за вашими деньгами.</p>
+            </div>
+        </div>
+    </div>
+    <div class="enter-point" style="position:relative;">
+        <div class="parallax-container"  style="height: 700px">
+            <div class="parallax"><img src="{% static "finance/image2.jpg" %}"></div>
+        </div>
+        <div class="enter-text" style="position: absolute;
+                                        top: 200px;
+                                        margin-left: 70%;">
+            <h3 class="">Возьмите контроль над <br> расходами в свои руки</h3>
+            <p class="">Управляйте вашими финансами и счетами где угодно<br> с помощью Economist. Дома. На работе. На отдыхе.</p>
+        </div>
+    </div>
+    <div class="container" style="margin-top: 5%; margin-bottom: 5%">
+        <div class="row">
+            <div class="col s6 offset-s3 center-align">
+                <h3 class="promo-caption">Получите больше функций.<br> И экономьте больше.</h3>
+                <p class="light center">Economist предлагает более полезные функции, чем любые другие сервисы. Поэтому вы можете лучше отслеживать ваши финансы и оптимизировать свои расходы.</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s3 center-align">
+                <i class="medium material-icons blue-text">backup</i>
+                <p class="promo-caption">Ваши данные в безопасности</p>
+                <p class="light center">Все ваши данные хранятся на нашем севере и вы можете не передивать об утрате данных.</p>
+
+            </div>
+            <div class="col s3 center-align">
+                <i class="medium material-icons blue-text">next_week</i>
+                <p class="promo-caption">Периодические поступления</p>
+                <p class="light center">Настройте ваши периодические поступления, и Economist будет обновлять ваш баланс автоматически.</p>
+            </div>
+            <div class="col s3 center-align">
+                <i class="medium material-icons blue-text">shopping_cart</i>
+                <p class="promo-caption">Данные о ваших покупках</p>
+                <p class="light center">Вносите данные о ваших покупках, и мы сохраним их для анализа.</p>
+            </div>
+            <div class="col s3 center-align">
+                <i class="medium material-icons blue-text">devices</i>
+                <p class="promo-caption">Доступность</p>
+                <p class="light center">Следите за вашими финансами с любого устройства с доступом в интернет.</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s3 center-align">
+                <i class="medium material-icons blue-text">business</i>
+                <p class="promo-caption">Для бизнеса</p>
+                <p class="light center">Свяжитесь с нами для получения подробных условий для бизнеса.</p>
+            </div>
+            <div class="col s3 center-align">
+                <i class="medium material-icons blue-text">apps</i>
+                <p class="promo-caption">Понятный интерфейс</p>
+                <p class="light center">Простой интерфейс без лишних деталей поможет вам быстро освиться в нашем приложении.</p>
+            </div>
+            <div class="col s3 center-align">
+                <i class="medium material-icons blue-text">attach_money</i>
+                <p class="promo-caption">Информация о валютах</p>
+                <p class="light center">Автоматический перевод ваших рублевых счетов в иностранную валюту.</p>
+            </div>
+            <div class="col s3 center-align">
+                <i class="medium material-icons blue-text">child_friendly</i>
+                <p class="promo-caption">Накопительные счета</p>
+                <p class="light center">Храните деньги в банке, и каждый месяц получаете проценты, мы поможем вам следить за состоянием счета.</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s3 center-align">
+                <i class="medium material-icons blue-text">person_add</i>
+                <p class="promo-caption">Общие счета</p>
+                <p class="light center">Разделите управление счетом со своим деловым партнером или членом вашей семьи.</p>
+            </div>
+            <div class="col s3 center-align">
+                <i class="medium material-icons blue-text">format_list_bulleted</i>
+                <p class="promo-caption">Категории</p>
+                <p class="light center">Разделите ваши траты на категории, что бы узнать на что вы тратие больше.</p>
+            </div>
+            <div class="col s3 center-align">
+                <i class="medium material-icons blue-text">insert_chart</i>
+                <p class="promo-caption">Визуальное представление данных</p>
+                <p class="light center">Подробная статистика изменения баланса поможет вам следить за вашими деньгами.</p>
+            </div>
+            <div class="col s3 center-align">
+                <i class="medium material-icons blue-text">content_paste</i>
+                <p class="promo-caption">Генерация отчета</p>
+                <p class="light center">Мы сгенерируем подробный отчет о перемещениях ваших финансов.</p>
+            </div>
+        </div>
+    </div>
+    <footer class="page-footer blue darken-1">
+        <div class="container">
+            <div class="row">
+                <div class="col l6 s12">
+                    <h5 class="white-text">Economist</h5>
+                    <p class="grey-text text-lighten-4">Следите за вашими деньгами.</p>
+                </div>
+                <div class="col l4 offset-l2 s12">
+                    <h5 class="white-text">Узнайте больше</h5>
+                    <ul>
+                        <li><a class="grey-text text-lighten-3" href="#!">Премиум</a></li>
+                        <li><a class="grey-text text-lighten-3" href="#!">Для бизнеса</a></li>
+                        <li><a class="grey-text text-lighten-3" href="#!">Для разработчиков</a></li>
+                        <li><a class="grey-text text-lighten-3" href="#!">Разработчики</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="footer-copyright">
+            <div class="container">
+                © 2016 Amber studio
+                <a class="grey-text text-lighten-4 right" href="#!">Обратная связь</a>
+            </div>
+        </div>
+    </footer>
+    <script>
+        $(document).ready(function () {
+            $('.parallax').parallax();
+            Materialize.updateTextFields();
+            $('#registration-form').hide();
+            $('#authorization-form').hide();
+            $('#reg_link').on('click', function (e) {
+                e.preventDefault();
+                $('#registration-form').fadeIn();
+            });
+            $(document).mouseup(function (e) {
+                var container = $("registration-form");
+                if (container.has(e.target).length === 0) {
+                    container.hide();
+                }
+            })
+        })
+    </script>
+    <div id="registration-form" style=" width:100%; min-height:100%;
+            overflow:hidden;
+            position:fixed;
+            top:0;
+            background-color: rgba(207,216,220,0.7);">
+        <div class="row">
+            <div class="col s6 offset-s3" style="top:20%; position:fixed;">
+                <div class="card z-depth-2">
+                    <div class="card-header  blue darken-1">
+                        <div class="card-title">
+                            <nav>
+                                <div class="nav-wrapper  blue darken-1">
+                                    <div class="col s12" style="padding-left:30px">
+                                        <a class="breadcrumb  blue darken-1 center-align">Регистрация</a>
+                                    </div>
+                                </div>
+                            </nav>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div class = 'row'>
+                            <a href="{% url 'social:begin' 'vk-oauth2' %}?next={{ request.path }}">
+                                <button class="waves-effect waves-light btn col s10 offset-s1  blue darken-1">
+                                    Регистрация через Вконтакте
+                                </button>
+                            </a>
+                        </div>
+                        <div class = 'row'>
+                            <a href="{% url 'social:begin' 'twitter' %}?next={{ request.path }}">
+                                <button class="waves-effect waves-light btn col s10 offset-s1  blue darken-1">
+                                    Регистрация через Twitter
+                                </button>
+                            </a>
+                        </div>
+                        <hr>
+                        <form method="POST" id="registration_form">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="input-field col 12 m12 s12">
+                                    <input autocomplete="off" id="login" type="text" class="validate">
+                                    <label class="active" for="login">Логин</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-field col 12 m12 s12">
+                                    <input autocomplete="off" id="password" type="password" class="validate">
+                                    <label for="password">Пароль</label>
+                                </div>
+                            </div>
+                            <div class = 'row'>
+                                <button type="submit" class="waves-effect waves-light btn col s10 offset-s1  blue darken-1">
+                                    Регистрация
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="authorization-form" style=" width:100%; min-height:100%;
+            overflow:hidden;
+            position:fixed;
+            top:0;
+            background-color: rgba(207,216,220,0.7);">
+        <div class="row">
+            <div class="col s4">
+                <div class="card z-depth-2">
+                    <div class="card-header  blue darken-1">
+                        <div class="card-title">
+                            <nav>
+                                <div class="nav-wrapper  blue darken-1">
+                                    <div class="col s12" style="padding-left:30px">
+                                        <a class="breadcrumb  blue darken-1 center-align">Авторизация</a>
+                                    </div>
+                                </div>
+                            </nav>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div class = 'row'>
+                            <a href="{% url 'social:begin' 'vk-oauth2' %}?next={{ request.path }}">
+                                <button class="waves-effect waves-light btn col s10 offset-s1  blue darken-1">
+                                    Авторизация через Вконтакте
+                                </button>
+                            </a>
+                        </div>
+                        <div class = 'row'>
+                            <a href="{% url 'social:begin' 'twitter' %}?next={{ request.path }}">
+                                <button class="waves-effect waves-light btn col s10 offset-s1  blue darken-1">
+                                    Авторизация через Twitter
+                                </button>
+                            </a>
+                        </div>
+                        <hr>
+                        <form method="POST" id="login_form">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="input-field col 12 m12 s12">
+                                    <input autocomplete="off" id="login" type="text" class="validate">
+                                    <label class="active" for="login">Логин</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-field col 12 m12 s12">
+                                    <input autocomplete="off" id="password" type="password" class="validate">
+                                    <label for="password">Пароль</label>
+                                </div>
+                            </div>
+                            <div class = 'row'>
+                                <button type="submit" class="waves-effect waves-light btn col s10 offset-s1  blue darken-1">
+                                    Вход
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
