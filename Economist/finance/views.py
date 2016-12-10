@@ -4,7 +4,7 @@ from datetime import date
 
 from django.template import RequestContext
 
-from .models import Account, Charge
+from .models import Account, Charge, User
 from .forms import ChargeForm, AccountForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -106,3 +106,45 @@ def profile_view(request):
                'email': request.user.email
                }
     return render(request, 'finance/profile.html', context)
+
+
+def auth(request):
+    if request.method == 'POST':
+        if 'login' in request.POST:
+            username = request.POST['login']
+            if 'password' in request.POST:
+                password = request.POST['password']
+                user = authenticate(username=username, password=password)
+                if user:
+                    login(request, user)
+                    return HttpResponse(status=200)
+                else:
+                    return HttpResponse(status=401)  # Unauthorized
+
+            else:
+                return HttpResponse(status=400)  # BadRequest
+        else:
+            return HttpResponse(status=400)  # BadRequest
+
+
+def register(request):
+    if request.method == 'POST':
+        if 'login' in request.POST:
+            username = request.POST['login']
+            if 'password' in request.POST:
+                password = request.POST['password']
+                user = User.objects.create_user(username=username, password=password, email='')
+                user.phone_number = ''
+                user.address = ''
+                user.save()
+                user = authenticate(username=username, password=password)
+                if user:
+                    login(request, user)
+                    return HttpResponse(status=200)
+                else:
+                    return HttpResponse(status=401)  #Unauthorized
+
+            else:
+                return HttpResponse(status=400)  # BadRequest
+        else:
+            return HttpResponse(status=400)  # BadRequest

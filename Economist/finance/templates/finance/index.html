@@ -30,7 +30,7 @@
                                         margin-left: 150px;">
             <h3 class="white-text">Экономьте больше<br> каждый день</h3>
             <p class="white-text">Миллионы людей доверяют нам<br> контроль над своими финансами каждый день</p>
-            <a class="waves-effect waves-light btn blue darken-1">НАЧНИТЕ - ЭТО БЕСПЛАТНО</a>
+            <a class="waves-effect waves-light btn blue darken-1" id="reg-btn">НАЧНИТЕ - ЭТО БЕСПЛАТНО</a>
         </div>
     </div>
 
@@ -173,29 +173,137 @@
     </footer>
     <script>
         $(document).ready(function () {
+            var regForm = $('#registration-form');
+            var authForm = $('#authorization-form')
+            var regBtn = $('#reg-btn');
+
+            //Инициализация элементов Materialize CSS
             $('.parallax').parallax();
             Materialize.updateTextFields();
-            $('#registration-form').hide();
-            $('#authorization-form').hide();
+
+            //Скрываю формы авторизации и регистрации
+            $(regForm).hide();
+            $(authForm).hide();
+
+            function showRegistrationForm() {
+                $(regForm).fadeIn();
+                $(regBtn).addClass('disabled');
+            }
+
+            function hideRegistrationForm() {
+                $(regForm).fadeOut();
+                $(regBtn).removeClass('disabled');
+            }
+
+            function showAuthForm() {
+                $(authForm).fadeIn();
+                $(regBtn).addClass('disabled');
+            }
+
+            function hideAuthForm() {
+                $(authForm).fadeOut();
+                $(regBtn).removeClass('disabled');
+            }
+
+            $(regBtn).on('click', function (e) {
+                e.preventDefault();
+                showRegistrationForm();
+            });
+
             $('#reg_link').on('click', function (e) {
                 e.preventDefault();
-                $('#registration-form').fadeIn();
+                showRegistrationForm();
             });
-            $(document).mouseup(function (e) {
-                var container = $("registration-form");
-                if (container.has(e.target).length === 0) {
-                    container.hide();
+
+            $('#login_link').on('click', function (e) {
+                e.preventDefault();
+                showAuthForm();
+            });
+            //Обработка клика не по нашим формам, что бы закрыть их после этого!
+            $(document).mousedown(function (e) {
+                var container = $(".card");
+                if (!container.is(e.target) // если клик был не по нашему блоку
+                    && container.has(e.target).length === 0) { // и не по его дочерним элементам
+                    hideRegistrationForm();
+                    hideAuthForm();
                 }
-            })
+            });
+
+            //Register user AJAX request
+            function register(){
+                var url = '/auth/reg';
+                var login = $('#login').val();
+                if (login.length == 0){
+                    Materialize.toast('Введите имя пользователя', 4000);
+                    return;
+                }
+
+                var password = $('#password').val();
+                if (password.length == 0){
+                    Materialize.toast('Введите пароль', 4000);
+                    return;
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    data:{
+                        login: login,
+                        password: password,
+                        csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()
+                    },
+                    success:function () {
+                        location.reload();
+                    }
+                })
+            }
+
+            function auth(){
+                var url = '/auth/auth';
+                var login = $('#login_auth').val();
+                if (login.length == 0){
+                    Materialize.toast('Введите имя пользователя', 4000);
+                    return;
+                }
+
+                var password = $('#password_auth').val();
+                if (password.length == 0){
+                    Materialize.toast('Введите пароль', 4000);
+                    return;
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    data:{
+                        login: login,
+                        password: password,
+                        csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()
+                    },
+                    success:function () {
+                        location.reload();
+                    }
+                })
+            }
+
+            $('#register').on('click', function (e) {
+                e.preventDefault();
+                register();
+            });
+
+            $('#login_btn').on('click', function (e) {
+                e.preventDefault();
+                auth();
+            });
         })
     </script>
     <div id="registration-form" style=" width:100%; min-height:100%;
-            overflow:hidden;
+            overflow:visible;
             position:fixed;
             top:0;
             background-color: rgba(207,216,220,0.7);">
         <div class="row">
-            <div class="col s6 offset-s3" style="top:20%; position:fixed;">
+            <div class="col s4 offset-s4" style="top:20%; position:fixed;">
                 <div class="card z-depth-2">
                     <div class="card-header  blue darken-1">
                         <div class="card-title">
@@ -238,12 +346,12 @@
                                     <label for="password">Пароль</label>
                                 </div>
                             </div>
-                            <div class = 'row'>
-                                <button type="submit" class="waves-effect waves-light btn col s10 offset-s1  blue darken-1">
-                                    Регистрация
-                                </button>
-                            </div>
                         </form>
+                        <div class = 'row'>
+                            <button class="waves-effect waves-light btn col s10 offset-s1  blue darken-1" id="register">
+                                Регистрация
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -255,7 +363,7 @@
             top:0;
             background-color: rgba(207,216,220,0.7);">
         <div class="row">
-            <div class="col s4">
+            <div class="col s4 offset-s4" style="top:20%; position:fixed;">
                 <div class="card z-depth-2">
                     <div class="card-header  blue darken-1">
                         <div class="card-title">
@@ -288,22 +396,22 @@
                             {% csrf_token %}
                             <div class="row">
                                 <div class="input-field col 12 m12 s12">
-                                    <input autocomplete="off" id="login" type="text" class="validate">
-                                    <label class="active" for="login">Логин</label>
+                                    <input autocomplete="off" id="login_auth" type="text" class="validate">
+                                    <label class="active" for="login_auth">Логин</label>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="input-field col 12 m12 s12">
-                                    <input autocomplete="off" id="password" type="password" class="validate">
-                                    <label for="password">Пароль</label>
+                                    <input autocomplete="off" id="password_auth" type="password" class="validate">
+                                    <label for="password_auth">Пароль</label>
                                 </div>
                             </div>
-                            <div class = 'row'>
-                                <button type="submit" class="waves-effect waves-light btn col s10 offset-s1  blue darken-1">
-                                    Вход
-                                </button>
-                            </div>
                         </form>
+                        <div class = 'row'>
+                            <button class="waves-effect waves-light btn col s10 offset-s1  blue darken-1" id="login_btn">
+                                Вход
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>

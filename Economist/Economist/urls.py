@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
+from finance.views import auth, register
 
 urlpatterns = [
 
@@ -22,4 +23,6 @@ urlpatterns = [
     url('', include('social_django.urls', namespace='social')),
     url('', include('django.contrib.auth.urls', namespace='auth')),
     url(r'^', include('finance.urls', namespace="finance")),
+    url(r'^auth/reg', register, name='register'),
+    url(r'^auth/auth', auth, name='auth'),
 ]
