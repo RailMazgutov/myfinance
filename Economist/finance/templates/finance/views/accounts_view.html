@@ -1,0 +1,30 @@
+{% extends 'finance/base.html' %}
+{% load staticfiles %}
+{% block tittle %}Счета{% endblock %}
+{% block content %}
+    <table class="bordered highlight" >
+        <thead>
+            <tr>
+                <th>Счет</th>
+                <th>Баланс</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for account in accounts %}
+            <tr>
+                <td><a href="{% url 'finance:account_details' pk=account.pk %}">{{ account.name }}</a></td>
+                <td>{{ account.total }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="row">
+        <div class="col s4">
+            <form method="POST" class="post-form">{% csrf_token %}
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="save btn btn-default blue darken-1">Добавить</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

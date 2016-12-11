@@ -32,7 +32,7 @@ def accounts(request):
         context = RequestContext(request,
                              {'request': request,
                               'user': request.user})
-        return render_to_response('finance/index.html', context_instance=context)
+        return render_to_response('finance/views/index.html', context_instance=context)
     if request.method == "POST":
         form = AccountForm(request.POST)
         if form.is_valid():
@@ -43,7 +43,7 @@ def accounts(request):
         form = AccountForm()
 
     return render(request,
-                  'finance/accounts_view.html',
+                  'finance/views/accounts_view.html',
                   {"accounts": user.account.all(), 'form': form, 'user':user})
 
 
@@ -77,7 +77,7 @@ def account_details(request, pk):
         statistic = {'month': months[month - 1], 'income': income, 'outcome': outcome}
         statistics.append(statistic)
     return render(request,
-                  'finance/account_details_view.html',
+                  'finance/views/account_details_view.html',
                   {'form': form, 'account': account, 'statistics': statistics})
 
 @login_required
@@ -88,7 +88,7 @@ def profile(request):
                'email': request.user.email,
                'accounts': request.user.account.all()
                }
-    return render(request, 'finance/profile.html', context)
+    return render(request, 'finance/views/profile.html', context)
 
 
 def auth(request):

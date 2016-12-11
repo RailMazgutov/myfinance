@@ -10,6 +10,7 @@
 <body>
     <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js"></script>
+    <script type="text/javascript" src="{% static 'finance/js/index.js' %}"></script>
     <nav>
         <div class="nav-wrapper  blue darken-1">
             <a href="#" class="brand-logo" style="left: 30px">Economist</a>
@@ -23,7 +24,7 @@
     </nav>
     <div class="enter-point" style="position:relative;">
         <div class="parallax-container"  style="height: 700px">
-            <div class="parallax"><img src="{% static "finance/index_parallax.jpg" %}"></div>
+            <div class="parallax"><img src="{% static "finance/img/index_parallax.jpg" %}"></div>
         </div>
         <div class="enter-text" style="position: absolute;
                                         top: 200px;
@@ -62,7 +63,7 @@
     </div>
     <div class="enter-point" style="position:relative;">
         <div class="parallax-container"  style="height: 700px">
-            <div class="parallax"><img src="{% static "finance/image2.jpg" %}"></div>
+            <div class="parallax"><img src="{% static "finance/img/image2.jpg" %}"></div>
         </div>
         <div class="enter-text" style="position: absolute;
                                         top: 200px;
@@ -146,157 +147,7 @@
             </div>
         </div>
     </div>
-    <footer class="page-footer blue darken-1">
-        <div class="container">
-            <div class="row">
-                <div class="col l6 s12">
-                    <h5 class="white-text">Economist</h5>
-                    <p class="grey-text text-lighten-4">Следите за вашими деньгами.</p>
-                </div>
-                <div class="col l4 offset-l2 s12">
-                    <h5 class="white-text">Узнайте больше</h5>
-                    <ul>
-                        <li><a class="grey-text text-lighten-3" href="#!">Премиум</a></li>
-                        <li><a class="grey-text text-lighten-3" href="#!">Для бизнеса</a></li>
-                        <li><a class="grey-text text-lighten-3" href="#!">Для разработчиков</a></li>
-                        <li><a class="grey-text text-lighten-3" href="#!">Разработчики</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <div class="footer-copyright">
-            <div class="container">
-                © 2016 Amber studio
-                <a class="grey-text text-lighten-4 right" href="#!">Обратная связь</a>
-            </div>
-        </div>
-    </footer>
-    <script>
-        $(document).ready(function () {
-            var regForm = $('#registration-form');
-            var authForm = $('#authorization-form')
-            var regBtn = $('#reg-btn');
-
-            //Инициализация элементов Materialize CSS
-            $('.parallax').parallax();
-            Materialize.updateTextFields();
-
-            //Скрываю формы авторизации и регистрации
-            $(regForm).hide();
-            $(authForm).hide();
-
-            function showRegistrationForm() {
-                $(regForm).fadeIn();
-                $(regBtn).addClass('disabled');
-            }
-
-            function hideRegistrationForm() {
-                $(regForm).fadeOut();
-                $(regBtn).removeClass('disabled');
-            }
-
-            function showAuthForm() {
-                $(authForm).fadeIn();
-                $(regBtn).addClass('disabled');
-            }
-
-            function hideAuthForm() {
-                $(authForm).fadeOut();
-                $(regBtn).removeClass('disabled');
-            }
-
-            $(regBtn).on('click', function (e) {
-                e.preventDefault();
-                showRegistrationForm();
-            });
-
-            $('#reg_link').on('click', function (e) {
-                e.preventDefault();
-                showRegistrationForm();
-            });
-
-            $('#login_link').on('click', function (e) {
-                e.preventDefault();
-                showAuthForm();
-            });
-            //Обработка клика не по нашим формам, что бы закрыть их после этого!
-            $(document).mousedown(function (e) {
-                var container = $(".card");
-                if (!container.is(e.target) // если клик был не по нашему блоку
-                    && container.has(e.target).length === 0) { // и не по его дочерним элементам
-                    hideRegistrationForm();
-                    hideAuthForm();
-                }
-            });
-
-            //Register user AJAX request
-            function register(){
-                var url = '/auth/reg';
-                var login = $('#login').val();
-                if (login.length == 0){
-                    Materialize.toast('Введите имя пользователя', 4000);
-                    return;
-                }
-
-                var password = $('#password').val();
-                if (password.length == 0){
-                    Materialize.toast('Введите пароль', 4000);
-                    return;
-                }
-
-                $.ajax({
-                    type: 'POST',
-                    url: url,
-                    data:{
-                        login: login,
-                        password: password,
-                        csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()
-                    },
-                    success:function () {
-                        location.reload();
-                    }
-                })
-            }
-
-            function auth(){
-                var url = '/auth/auth';
-                var login = $('#login_auth').val();
-                if (login.length == 0){
-                    Materialize.toast('Введите имя пользователя', 4000);
-                    return;
-                }
-
-                var password = $('#password_auth').val();
-                if (password.length == 0){
-                    Materialize.toast('Введите пароль', 4000);
-                    return;
-                }
-
-                $.ajax({
-                    type: 'POST',
-                    url: url,
-                    data:{
-                        login: login,
-                        password: password,
-                        csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()
-                    },
-                    success:function () {
-                        location.reload();
-                    }
-                })
-            }
-
-            $('#register').on('click', function (e) {
-                e.preventDefault();
-                register();
-            });
-
-            $('#login_btn').on('click', function (e) {
-                e.preventDefault();
-                auth();
-            });
-        })
-    </script>
+    {% include 'finance/utils/footer.html' %}
     <div id="registration-form" style=" width:100%; min-height:100%;
             overflow:visible;
             position:fixed;

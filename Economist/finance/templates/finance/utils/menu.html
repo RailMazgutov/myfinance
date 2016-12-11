@@ -1,0 +1,50 @@
+{% load staticfiles %}
+<script type="text/javascript" src="{% static 'finance/js/menu.js' %}"></script>
+<ul class="side-nav" id="slide-out" style="margin-left: 300px">
+    <li>
+        <div class="userView">
+            <img class="background" src="{% static 'finance/img/image2.jpg' %}">
+            <div class='row'>
+                <div class='col s4'>
+                    {% if user.first_name and user.last_name %}
+                    <div class="white-text" style="width:80px;
+                        height:80px;
+                        border-radius:50px;
+                        font-size:45px;
+                        color:#fff;
+                        line-height:80px;
+                        text-align:center;
+                        background:#26a69a">{{user.first_name|make_list|first}}{{user.last_name|make_list|first}}</div>
+                </div>
+                <div class='col s8'>
+                    <a href=""><span class="white-text name">{{user.first_name}} {{user.last_name}}</span></a>
+                    {% else %}
+                        <div class="white-text" style="width:80px;
+                        height:80px;
+                        border-radius:50px;
+                        font-size:45px;
+                        color:#fff;
+                        line-height:80px;
+                        text-align:center;
+                        background:#26a69a">{{user.username|make_list|first|title}}</div>
+                </div>
+                <div class='col s8'>
+                    <a href=""><span class="white-text name">{{user.username}}</span></a>
+                    {% endif %}
+                    <a><span class="white-text name">Ваш баланс: {{user.balance}}</span></a>
+                    <a href="{% url 'auth:logout' %}?next={{ request.path }}">Выход</a>
+                </div>
+            </div>
+        </div>
+    </li>
+    <li><a href="">Главная</a></li>
+    <li><a class="dropdown-button" href="#" data-activates="dropdown1">Мои счета<i class="material-icons right"></i></a></li>
+    <ul id='dropdown1' class='dropdown-content'>
+        {% for account in accounts %}
+            <li><a href="{% url 'finance:account_details' pk=account.pk %}">{{ account.name }}</a></li>
+        {% endfor %}
+    </ul>
+    <li><div class="divider"></div></li>
+    <li><a href="{% url 'finance:profile' %}">Настройки</a></li>
+
+</ul>
