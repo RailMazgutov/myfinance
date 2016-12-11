@@ -17,6 +17,24 @@ class User(AbstractUser):
 
         return balance
 
+    def account_statistics(self):
+        accounts = self.account.all()
+        acc_statistics = {}
+        balance = self.balance()
+        for account in accounts:
+            part_of_balance = 100*account.total/balance
+            part_of_balance = round(part_of_balance, 1)
+            acc_statistics[account.name] = part_of_balance
+
+        return acc_statistics
+
+    def last_transactions(self, count):
+        accounts = self.account.all()
+        transactions = Charge.objects.filter(account__user = self).ordered_by('_date')[:count]
+        return transactions
+
+
+
 
 class Account(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='account')
@@ -39,6 +57,10 @@ class Account(models.Model):
 
     def __iter__(self):
         return self.charges.all().__iter__()
+
+    def last_transactions(self, count):
+        transactions = self.charges.all().ordered_by('_date')[:count]
+        return transactions
 
     @property
     def total(self):
