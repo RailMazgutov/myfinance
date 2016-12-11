@@ -44,7 +44,7 @@ def accounts(request):
 
     return render(request,
                   'finance/accounts_view.html',
-                  {"accounts": user.account.all(), 'form': form})
+                  {"accounts": user.account.all(), 'form': form, 'user':user})
 
 
 @login_required
@@ -80,30 +80,13 @@ def account_details(request, pk):
                   'finance/account_details_view.html',
                   {'form': form, 'account': account, 'statistics': statistics})
 
-
-def login_view(request):
-    username = request.POST.get('username')
-    password = request.POST.get('password')
-    if not (username and password):
-        return render(request, 'finance/login.html')
-    user = authenticate(username=username, password=password)
-    if not user:
-        return render(request, 'finance/login.html')
-    login(request, user)
-    return redirect('/finance/profile')
-
-def logout_view(request):
-    if request.method == 'POST':
-        logout(request)
-    return redirect('/')
-
-
 @login_required
-def profile_view(request):
+def profile(request):
     context = {'name': request.user.username,
                'password': request.user.password,
                'address': request.user.address,
-               'email': request.user.email
+               'email': request.user.email,
+               'accounts': request.user.account.all()
                }
     return render(request, 'finance/profile.html', context)
 
@@ -148,3 +131,4 @@ def register(request):
                 return HttpResponse(status=400)  # BadRequest
         else:
             return HttpResponse(status=400)  # BadRequest
+

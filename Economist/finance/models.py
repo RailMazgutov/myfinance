@@ -9,6 +9,14 @@ class User(AbstractUser):
     phone_number = models.CharField(max_length=16)
     address = models.CharField(max_length=50)
 
+    def balance(self):
+        balance = 0
+        accounts = self.account.all()
+        for account in accounts:
+            balance += account.total
+
+        return balance
+
 
 class Account(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='account')

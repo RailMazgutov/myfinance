@@ -1,10 +1,11 @@
 {% load staticfiles %}
-!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Счета</title>
+    <title>Title</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/css/materialize.min.css">
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
     <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
@@ -58,31 +59,9 @@
 
     </ul>
     <div class="container">
-        <table class="bordered highlight" >
-            <thead>
-                <tr>
-                    <th>Счет</th>
-                    <th>Баланс</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for account in accounts %}
-                <tr>
-                    <td><a href="{% url 'finance:account_details' pk=account.pk %}">{{ account.name }}</a></td>
-                    <td>{{ account.total }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        <div class="row">
-            <div class="col s4">
-                <form method="POST" class="post-form">{% csrf_token %}
-                    {% csrf_token %}
-                    {{ form.as_p }}
-                    <button type="submit" class="save btn btn-default">Добавить</button>
-                </form>
-            </div>
-        </div>
-    </div>
+		<p>Имя: {{ name }}</p>
+		<p>Адрес: {{ address }}</p>
+		<p>Электронная почта: {{ email }}</p>
+	</div>
 </body>
 </html>
