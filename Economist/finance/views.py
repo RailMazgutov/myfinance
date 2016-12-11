@@ -3,27 +3,55 @@ from django.shortcuts import render, redirect, render_to_response
 from datetime import date
 
 from django.template import RequestContext
+from requests import Response
 
-from .models import Account, Charge, User
-from .forms import ChargeForm, AccountForm
-from django.contrib.auth import authenticate, login, logout
+from rest_framework import viewsets
+from rest_framework import serializers, views
+
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 # Create your views here.
 
+from .serializers import AccountSerializer, ChargeSerializer, StatsByMonthSerializer
+from .models import Account, Charge, User
+from .forms import ChargeForm, AccountForm
+from .decorators import security
 
-def security(func, *args, **kwargs):
-    def wrapper(*args, **kwargs):
-        request = args[0]
-        pk = kwargs['pk']
-        user = request.user
-        account = Account.objects.get(pk=pk)
-        if account.user == user:
-            return func(*args, **kwargs)
 
-        else:
-            return HttpResponse('Not yours')
+#api
+class AccountViewSet(viewsets.ModelViewSet):
+    serializer_class = AccountSerializer
 
-    return wrapper
+    def get_queryset(self):
+        return self.request.user.account.all()
+
+
+class ChargeViewSet(viewsets.ModelViewSet):
+    serializer_class = ChargeSerializer
+
+    def get_queryset(self):
+        return Charge.objects.filter(account__user=self.request.user).order_by('_date')
+
+
+class MonthStatCollection(views.APIView):
+
+    def get(self, request, pk=None):
+        charges = Account.objects.get(pk=pk).charges
+        months = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль',
+                  'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь']
+        curr_year = date.today().year
+        statistics = []
+        for month in range(1, 13):
+            month_charges = charges.filter(_date__month=month, _date__year=curr_year).all()
+            total=0
+            for charge in month_charges:
+                total += charge.value
+
+            statistic = {'month': months[month - 1], 'amount': total}
+            statistics.append(statistic)
+
+        serializer = StatsByMonthSerializer(statistics, many=True)
+        return Response(serializer.data)
 
 
 def accounts(request):
