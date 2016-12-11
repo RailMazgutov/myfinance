@@ -1,0 +1,27 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block tittle %} {% endblock %}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/css/materialize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'finance/css/base.css' %}">
+    {% block css_import %}
+    {% endblock %}
+</head>
+<body>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js"></script>
+    {% include 'finance/utils/head_nav.html' %}
+
+    <div class="main">
+        <div class="container">
+            {% include 'finance/utils/menu.html' with user=user accounts=accounts %}
+            {% block content %}
+            {% endblock %}
+        </div>
+    </div>
+    {% include 'finance/utils/footer.html' %}
+</body>
+</html>
