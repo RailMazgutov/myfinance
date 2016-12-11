@@ -34,6 +34,12 @@ class User(AbstractUser):
         return transactions
 
 
+class Contacts(models.Model):
+    owner = models.OneToOneField(settings.AUTH_USER_MODEL, related_name='contacts')
+    contacts = models.ManyToManyField(settings.AUTH_USER_MODEL)
+
+    def add_contact(self, contact):
+        self.contacts.add(contact)
 
 
 class Account(models.Model):
