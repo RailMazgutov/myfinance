@@ -32,6 +32,25 @@ class User(AbstractUser):
         transactions = Charge.objects.filter(account__user = self).order_by('_date')[:count]
         return transactions
 
+    def balance_statistic(self, count=30):
+        current_date = date.today()
+        current_balance = self.balance()
+        balance_statistic = [{'date': current_date, 'balance': current_balance}]
+        transactions = Charge.objects.filter(account__user=self).order_by('_date')
+        if not transactions:
+            return balance_statistic
+
+        for transaction in transactions:
+            if not transaction.date == current_date:
+                balance_statistic.append({'date': current_date, 'balance': current_balance})
+                if len(balance_statistic) == count:
+                    return balance_statistic
+
+                current_date = transaction.date
+
+            current_balance -= transaction.value
+
+        return balance_statistic
 
 class Contacts(models.Model):
     owner = models.OneToOneField(settings.AUTH_USER_MODEL, related_name='contacts')
@@ -66,6 +85,54 @@ class Account(models.Model):
     def last_transactions(self, count):
         transactions = self.charges.all().ordered_by('_date')[:count]
         return transactions
+
+    def last_transactions_statistic(self, count=7):
+        transactions = self.charges.all().ordered_by('_date')
+        if not transactions:
+            return None
+
+        current_date =  transactions[0].date
+        income = 0
+        outcome = 0
+        transactions_statistic = []
+        for transaction in transactions:
+            if not transaction.date == current_date:
+                transactions_statistic.append({'income':income, 'outcome':outcome, 'date':current_date})
+                if len(transactions_statistic) == count:
+                    return transactions_statistic
+
+                current_date = transaction.date
+                income = 0
+                outcome = 0
+
+            if transaction.value > 0:
+                income += transaction.value
+
+            else:
+                outcome += transaction.value
+
+        return transactions_statistic
+
+
+    def balance_statistic(self, count = 30):
+        current_balance = self._total
+        current_date = date.today()
+        transactions = self.charges.all().ordered_by('_date')
+        balance_statistic = [{'date': current_date, 'balance': current_balance}]
+        if not transactions:
+            return balance_statistic
+
+        for transaction in transactions:
+            if not transaction.date == current_date:
+                balance_statistic.append({'date':current_date, 'balance':current_balance})
+                if len(balance_statistic) ==count:
+                    return balance_statistic
+
+                current_date = transaction.date
+
+            current_balance -= transaction.value
+
+        return balance_statistic
 
     @property
     def total(self):
