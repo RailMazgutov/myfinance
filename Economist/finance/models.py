@@ -29,14 +29,13 @@ class User(AbstractUser):
         return acc_statistics
 
     def last_transactions(self, count):
-        accounts = self.account.all()
-        transactions = Charge.objects.filter(account__user = self).ordered_by('_date')[:count]
+        transactions = Charge.objects.filter(account__user = self).order_by('_date')[:count]
         return transactions
 
 
 class Contacts(models.Model):
     owner = models.OneToOneField(settings.AUTH_USER_MODEL, related_name='contacts')
-    contacts = models.ManyToManyField(settings.AUTH_USER_MODEL)
+    contacts = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='in_contacts')
 
     def add_contact(self, contact):
         self.contacts.add(contact)
@@ -75,6 +74,9 @@ class Account(models.Model):
     class Meta:
         db_table = 'account'
 
+    def __str__(self):
+        return self.name + " - " + str(self.total)
+
 
 class Charge(models.Model):
     _value = models.DecimalField(max_digits=8, decimal_places=2)
@@ -94,3 +96,6 @@ class Charge(models.Model):
     @property
     def date(self):
         return self._date
+
+    def __str__(self):
+        return str(self.account) + " : " + str(self.value) + " " + str(self.date)
