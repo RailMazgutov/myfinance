@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'social_django',
     'rest_framework',
     'finance',
+    'RestApi',
 ]
 
 MIDDLEWARE_CLASSES = [
