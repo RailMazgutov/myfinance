@@ -65,16 +65,15 @@ class Account(models.Model):
     _total = models.DecimalField(max_digits=15, decimal_places=2)
     name = models.CharField(max_length=20)
     @classmethod
-    def create(cls, total):
-        account = cls(_total = round(total, 2))
+    def create(cls, total, name, user):
+        account = cls(_total = round(total, 2), name=name, user=user)
         account.save()
         return account
 
-    def add_charge(self, charge):
+    def add_charge(self, charge, date):
         if self._total + charge.value < 0:
             return
 
-        charge.account = self
         charge.save()
         self._total += charge.value
         self.save()
@@ -151,9 +150,10 @@ class Charge(models.Model):
     account = models.ForeignKey("Account", related_name="charges")
 
     @classmethod
-    def create(cls, account, Value=0, Date = date.today()):
-        charge = cls(_value=round(Value, 2), _date = Date, account=account)
-        charge.save()
+    def create(cls, Value=0, Date = date.today()):
+        charge = cls()
+        charge._value = round(Value, 2)
+        charge._date = Date
         return charge
 
     @property
