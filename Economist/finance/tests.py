@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from .models import User, Contacts
+from .models import User, Contacts, Charge, Account
 # Create your tests here.
 
 class ContactsTest(TestCase):
@@ -15,3 +15,13 @@ class ContactsTest(TestCase):
         self.assertEqual(len(contacts_list.contacts.all()), 1)
         contacts_list.add_contact(user2)
         self.assertEqual(len(contacts_list.contacts.all()), 1)
+
+class AccountTest(TestCase):
+
+    def test_negative_balance(self):
+        user = User.objects.create_user(username='user', password='user', email='user@test.ru')
+        account = Account.create(100, 'test_account1', user)
+        charge = Charge.create(-1000)
+        account.add_charge(charge)
+        self.assertLess(account.total, 0)
+
