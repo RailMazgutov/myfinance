@@ -62,10 +62,11 @@ class AccountTest(TestCase):
         account.add_charge(charge)
 
         balance_stat = account.balance_statistic()
-        test_balance_stat = [{'date':datetime.date(2016, 1, 1), 'balance': 801},
-                             {'date':datetime.date(2016, 10, 25), 'balance': 3801},
-                             {'date': datetime.date(2016, 11, 9), 'balance':3600},
-                             {'date': datetime.date(2016, 12, 15), 'balance': 3300}]
-        test_balance_stat.reverse()
+        test_balance_stat = [{'date':datetime.date(2016, 12, 15), 'balance': 3300},
+                             {'date':datetime.date(2016, 12, 15), 'balance': 3600},
+                             {'date': datetime.date(2016, 11, 9), 'balance':3801},
+                             {'date': datetime.date(2016, 10, 25), 'balance': 801},
+                             {'date': datetime.date(2016, 1, 1), 'balance': 1000}]
+
         for i in range(len(balance_stat)):
             self.assertEqual(balance_stat[i], test_balance_stat[i])

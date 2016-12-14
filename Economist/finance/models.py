@@ -50,6 +50,7 @@ class User(AbstractUser):
 
             current_balance -= transaction.value
 
+        balance_statistic.append({'date': current_date, 'balance': current_balance})
         return balance_statistic
 
 class Contacts(models.Model):
@@ -131,6 +132,7 @@ class Account(models.Model):
 
             current_balance -= transaction.value
 
+        balance_statistic.append({'date': current_date, 'balance': current_balance})
         return balance_statistic
 
     @property
