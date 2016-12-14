@@ -44,7 +44,28 @@ class AccountTest(TestCase):
                            {'income': 115, 'outcome': -500, 'date': datetime.date(2016, 12, 15)}]
         test_statistics.reverse()
         transactions_statistic = account.last_transactions_statistic()
-        for stat in transactions_statistic:
-            print(stat)
         for i in range(len(transactions_statistic)):
             self.assertEqual(transactions_statistic[i], test_statistics[i])
+
+    def test_balance_statistic(self):
+        user = User.objects.create_user(username='user', password='user', email='user@test.ru')
+        account = Account.create(1000, 'test_balance_stat', user)
+        charge = Charge.create(-500, datetime.date(2016, 11, 9))
+        account.add_charge(charge)
+        charge = Charge.create(3000, datetime.date(2016, 10, 25))
+        account.add_charge(charge)
+        charge = Charge.create(-199, datetime.date(2016, 1, 1))
+        account.add_charge(charge)
+        charge = Charge.create(299, datetime.date(2016, 11, 9))
+        account.add_charge(charge)
+        charge = Charge.create(-300, datetime.date.today())
+        account.add_charge(charge)
+
+        balance_stat = account.balance_statistic()
+        test_balance_stat = [{'date':datetime.date(2016, 1, 1), 'balance': 801},
+                             {'date':datetime.date(2016, 10, 25), 'balance': 3801},
+                             {'date': datetime.date(2016, 11, 9), 'balance':3600},
+                             {'date': datetime.date(2016, 12, 15), 'balance': 3300}]
+        test_balance_stat.reverse()
+        for i in range(len(balance_stat)):
+            self.assertEqual(balance_stat[i], test_balance_stat[i])
