@@ -1,0 +1,21 @@
+{% extends 'finance/base.html' %}
+{% load staticfiles %}
+{% block tittle %}Редактирование профиля{% endblock %}
+{% block content %}
+    <form action="{% url 'finance:profile_form' id=id %}" method="post">
+		{% csrf_token %}
+        {% for field in form.visible_fields %}
+            <p>{{ field.label }}:</p>
+            {{ field }}
+			{% for error in field.errors %}
+				{{ error }}
+			{% endfor %}
+        {% endfor %}
+		{{ info }}
+        <br>
+		<br>
+        <button type="submit">Изменить</button>
+    </form>
+	<br>
+	<a href="{% url 'finance:profile' %}">Вернуться на страницу профиля</a>
+{% endblock %}

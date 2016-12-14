@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect, render_to_response
 from datetime import date
 
 from django.template import RequestContext
+from django.views.decorators.csrf import csrf_exempt
 from requests import Response
 
 from rest_framework import viewsets
@@ -14,7 +15,7 @@ from django.contrib.auth.decorators import login_required
 
 from .serializers import AccountSerializer, ChargeSerializer, StatsByMonthSerializer
 from .models import Account, Charge, User
-from .forms import ChargeForm, AccountForm
+from .forms import ChargeForm, AccountForm, ProfileForm, PasswordForm
 from .decorators import security
 
 
@@ -119,6 +120,62 @@ def profile(request):
     return render(request, 'finance/views/profile.html', context)
 
 
+@login_required
+def profile(request):
+    context = {'name': request.user.username,
+               'password': request.user.password,
+               'address': request.user.address,
+               'email': request.user.email,
+               'phone_number': request.user.phone_number,
+               'id': request.user.id,
+               'accounts': request.user.account.all()
+               }
+    return render(request, 'finance/views/profile.html', context)
+
+@login_required
+def profile_form(request, id):
+    user = request.user
+    info = ''
+    if request.method == "POST":
+        form = ProfileForm(request.POST, instance=user)
+        if form.is_valid():
+            user = form.save(commit=False)
+            #user.set_password(form.cleaned_data['password'])
+            user.save()
+            info = 'Изменения сохранены!'
+        else:
+            info = 'Что-то пошло не так...'
+    else:
+        form = ProfileForm(instance=user)
+    return render(
+        request, 'finance/views/profile_form.html',
+        {'form': form, 'info': info, 'id': id}
+    )
+
+@login_required
+def change_login_password(request):
+    user = request.user
+    info = ''
+    if request.method == "POST":
+        form = PasswordForm(request.POST, instance=user)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.set_password(form.cleaned_data['password'])
+            user.save()
+            user = authenticate(username=form.cleaned_data['username'],
+                                password=form.cleaned_data['password'])
+            login(request, user)
+            info = 'Логин и пароль были успешно изменены!'
+        else:
+            info = 'Что-то пошло не так...'
+    else:
+        form = PasswordForm()
+    return render(
+        request, 'finance/views/change_login_password.html',
+        {'form': form, 'info': info}
+    )
+
+@csrf_exempt
 def auth(request):
     if request.method == 'POST':
         if 'login' in request.POST:
@@ -138,6 +195,7 @@ def auth(request):
             return HttpResponse(status=400)  # BadRequest
 
 
+@csrf_exempt
 def register(request):
     if request.method == 'POST':
         if 'login' in request.POST:
