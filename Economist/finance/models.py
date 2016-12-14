@@ -29,14 +29,14 @@ class User(AbstractUser):
         return acc_statistics
 
     def last_transactions(self, count):
-        transactions = Charge.objects.filter(account__user = self).order_by('_date')[:count]
+        transactions = Charge.objects.filter(account__user = self).order_by('-_date')[:count]
         return transactions
 
     def balance_statistic(self, count=30):
         current_date = date.today()
         current_balance = self.balance()
         balance_statistic = [{'date': current_date, 'balance': current_balance}]
-        transactions = Charge.objects.filter(account__user=self).order_by('_date')
+        transactions = Charge.objects.filter(account__user=self).order_by('-_date')
         if not transactions:
             return balance_statistic
 
@@ -70,10 +70,10 @@ class Account(models.Model):
         account.save()
         return account
 
-    def add_charge(self, charge, date):
+    def add_charge(self, charge):
         if self._total + charge.value < 0:
             return
-
+        charge.account = self
         charge.save()
         self._total += charge.value
         self.save()
@@ -82,11 +82,11 @@ class Account(models.Model):
         return self.charges.all().__iter__()
 
     def last_transactions(self, count):
-        transactions = self.charges.all().ordered_by('_date')[:count]
+        transactions = self.charges.all().order_by('-_date')[:count]
         return transactions
 
     def last_transactions_statistic(self, count=7):
-        transactions = self.charges.all().ordered_by('_date')
+        transactions = self.charges.all().order_by('-_date')
         if not transactions:
             return None
 
@@ -116,7 +116,7 @@ class Account(models.Model):
     def balance_statistic(self, count = 30):
         current_balance = self._total
         current_date = date.today()
-        transactions = self.charges.all().ordered_by('_date')
+        transactions = self.charges.all().order_by('-_date')
         balance_statistic = [{'date': current_date, 'balance': current_balance}]
         if not transactions:
             return balance_statistic
