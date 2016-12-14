@@ -31,7 +31,7 @@ class ChargeViewSet(viewsets.ModelViewSet):
     serializer_class = ChargeSerializer
 
     def get_queryset(self):
-        return Charge.objects.filter(account__user=self.request.user).order_by('_date')
+        return Charge.objects.filter(account__user=self.request.user).order_by('transacted_at')
 
 
 class MonthStatCollection(views.APIView):
@@ -43,7 +43,7 @@ class MonthStatCollection(views.APIView):
         curr_year = date.today().year
         statistics = []
         for month in range(1, 13):
-            month_charges = charges.filter(_date__month=month, _date__year=curr_year).all()
+            month_charges = charges.filter(transacted_at__month=month, transacted_at__year=curr_year).all()
             total=0
             for charge in month_charges:
                 total += charge.value
@@ -94,7 +94,7 @@ def account_details(request, pk):
     curr_year = date.today().year
     statistics = []
     for month in range(1, 13):
-        month_charges = charges.filter(_date__month=month, _date__year=curr_year).all()
+        month_charges = charges.filter(transacted_at__month=month, transacted_at__year=curr_year).all()
         income = 0
         outcome = 0
         for charge in month_charges:

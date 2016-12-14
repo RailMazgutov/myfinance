@@ -29,14 +29,14 @@ class User(AbstractUser):
         return acc_statistics
 
     def last_transactions(self, count):
-        transactions = Charge.objects.filter(account__user = self).order_by('-_date')[:count]
+        transactions = Charge.objects.filter(account__user = self).order_by('-transacted_at')[:count]
         return transactions
 
     def balance_statistic(self, count=30):
         current_date = date.today()
         current_balance = self.balance()
         balance_statistic = [{'date': current_date, 'balance': current_balance}]
-        transactions = Charge.objects.filter(account__user=self).order_by('-_date')
+        transactions = Charge.objects.filter(account__user=self).order_by('-transacted_at')
         if not transactions:
             return balance_statistic
 
@@ -64,6 +64,7 @@ class Contacts(models.Model):
 class Account(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='account')
     _total = models.DecimalField(max_digits=15, decimal_places=2)
+    number = models.CharField(max_length=30, unique=True)
     name = models.CharField(max_length=20)
     @classmethod
     def create(cls, total, name, user):
@@ -83,11 +84,11 @@ class Account(models.Model):
         return self.charges.all().__iter__()
 
     def last_transactions(self, count):
-        transactions = self.charges.all().order_by('-_date')[:count]
+        transactions = self.charges.all().order_by('-transacted_at')[:count]
         return transactions
 
     def last_transactions_statistic(self, count=7):
-        transactions = self.charges.all().order_by('-_date')
+        transactions = self.charges.all().order_by('-transacted_at')
         if not transactions:
             return None
 
@@ -117,7 +118,7 @@ class Account(models.Model):
     def balance_statistic(self, count = 30):
         current_balance = self._total
         current_date = date.today()
-        transactions = self.charges.all().order_by('-_date')
+        transactions = self.charges.all().order_by('-transacted_at')
         balance_statistic = [{'date': current_date, 'balance': current_balance}]
         if not transactions:
             return balance_statistic
@@ -147,24 +148,24 @@ class Account(models.Model):
 
 
 class Charge(models.Model):
-    _value = models.DecimalField(max_digits=8, decimal_places=2)
-    _date = models.DateField()
+    amount = models.DecimalField(max_digits=8, decimal_places=2)
+    transacted_at = models.DateField()
     account = models.ForeignKey("Account", related_name="charges")
 
     @classmethod
-    def create(cls, Value=0, Date = date.today()):
+    def create(cls, Value=0, transacted_at = date.today()):
         charge = cls()
-        charge._value = round(Value, 2)
-        charge._date = Date
+        charge.amount = round(Value, 2)
+        charge.transacted_at = transacted_at
         return charge
 
     @property
     def value(self):
-        return self._value
+        return self.amount
 
     @property
     def date(self):
-        return self._date
+        return self.transacted_at
 
     def __str__(self):
         return str(self.account) + " : " + str(self.value) + " " + str(self.date)
