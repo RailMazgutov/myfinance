@@ -1,9 +1,12 @@
 <nav>
     <div class="nav-wrapper  blue darken-1">
-        <a href="" data-activates="slide-out" class="brand-logo button-collapse show-on-large" style="left: 40px">Economist</a>
-        <ul id="nav-mobile" class="right hide-on-med-and-down">
-            <li><a href="">Стоимость</a></li>
-            <li><a href="">Премиум</a></li>
-        </ul>
+        <div class="container">
+            <a href="" class="brand-logo" style="left: 18%">Economist</a>
+            <ul id="nav-mobile" class="right hide-on-med-and-down">
+                <li><a>Ваш баланс: {{ user.balance }}</a></li>
+                <li><a href="{% url 'auth:logout' %}?next={{ request.path }}"><i class="material-icons">settings</i></a></li>
+                <li><a href="{% url 'auth:logout' %}?next={{ request.path }}">Выход</a></li>
+            </ul>
+        </div>
     </div>
 </nav>

@@ -1,13 +1,16 @@
 from django import forms
 from datetime import date
+
+from django.forms import SelectDateWidget
+
 from .models import Charge, Account, User
 from django.core.exceptions import ValidationError
 import re
 
 
 class ChargeForm(forms.ModelForm):
-    _value = forms.DecimalField(label = 'Value', required = True)
-    transacted_at = forms.DateField(label = 'Date', required = True)
+    amount = forms.DecimalField(label = 'Сумма', required = True)
+    transacted_at = forms.DateField(label = 'Дата', required = True, widget=SelectDateWidget(empty_label="Nothing"))
 
     class Meta:
         model = Charge

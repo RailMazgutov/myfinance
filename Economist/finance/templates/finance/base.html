@@ -17,9 +17,17 @@
 
     <div class="main">
         <div class="container">
-            {% include 'finance/utils/menu.html' with user=user accounts=accounts %}
-            {% block content %}
-            {% endblock %}
+
+            <div class="row">
+            <div class="col s3">
+                {% include 'finance/utils/menu.html' with user=user accounts=accounts %}
+            </div>
+            <div class="col s9">
+                {% block content %}
+                {% endblock %}
+            </div>
+
+            </div>
         </div>
     </div>
 </body>

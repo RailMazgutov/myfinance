@@ -2,18 +2,12 @@
 {% load staticfiles %}
 {% block tittle %}Счета{% endblock %}
 {% block content %}
+
     <table class="bordered highlight" >
-        <thead>
-            <tr>
-                <th>Счет</th>
-                <th>Баланс</th>
-            </tr>
-        </thead>
         <tbody>
             {% for account in accounts %}
             <tr>
-                <td><a href="{% url 'finance:account_details' pk=account.pk %}">{{ account.name }}</a></td>
-                <td>{{ account.total }}</td>
+                <td>{% include "finance/elements/account_preview.html" with account=account %}</td>
             </tr>
             {% endfor %}
         </tbody>

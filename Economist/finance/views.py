@@ -19,40 +19,7 @@ from .forms import ChargeForm, AccountForm, ProfileForm, PasswordForm
 from .decorators import security
 
 
-#api
-class AccountViewSet(viewsets.ModelViewSet):
-    serializer_class = AccountSerializer
 
-    def get_queryset(self):
-        return self.request.user.account.all()
-
-
-class ChargeViewSet(viewsets.ModelViewSet):
-    serializer_class = ChargeSerializer
-
-    def get_queryset(self):
-        return Charge.objects.filter(account__user=self.request.user).order_by('transacted_at')
-
-
-class MonthStatCollection(views.APIView):
-
-    def get(self, request, pk=None):
-        charges = Account.objects.get(pk=pk).charges
-        months = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль',
-                  'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь']
-        curr_year = date.today().year
-        statistics = []
-        for month in range(1, 13):
-            month_charges = charges.filter(transacted_at__month=month, transacted_at__year=curr_year).all()
-            total=0
-            for charge in month_charges:
-                total += charge.value
-
-            statistic = {'month': months[month - 1], 'amount': total}
-            statistics.append(statistic)
-
-        serializer = StatsByMonthSerializer(statistics, many=True)
-        return Response(serializer.data)
 
 
 def accounts(request):
@@ -218,3 +185,14 @@ def register(request):
         else:
             return HttpResponse(status=400)  # BadRequest
 
+
+@login_required
+@security
+def delete_account(request, pk):
+    Account.objects.get(pk=pk).delete()
+    return HttpResponse(status=200)
+
+@login_required
+def delete_charge(request, pk):
+    Charge.objects.get(pk=pk).delete()
+    return HttpResponse(status=200)

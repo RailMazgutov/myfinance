@@ -1,0 +1,22 @@
+{% load staticfiles %}
+<div class="col s12 m12">
+    <div class="card">
+        <div class="card-content">
+            <span class="card-title">{{ account.name }} : Номер счета {{ account.number }}</span>
+            <p>Баланс: {{account.total}}</p>
+            <table class="bordered highlight" >
+                <tbody>
+                    {% for charge in account.charges.all|slice:":5" %}
+                        <tr>
+                        {% include 'finance/elements/chargeview.html' with charge=charge%}
+                        </tr>
+
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="card-action blue darken-1">
+            <a href="{% url 'finance:account_details' pk=account.pk %}" class="white-text">Подробнее...</a>
+        </div>
+    </div>
+</div>

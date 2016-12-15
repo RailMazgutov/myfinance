@@ -6,8 +6,8 @@
 {% block content %}
     <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
-    <div class="container">
-        <h2>Все транзакции по вашему счету</h2>
+
+        <h2>Транзакции по счету {{ account.name }}</h2>
         <table class="bordered highlight" >
             <thead>
                 <tr>
@@ -43,10 +43,8 @@
         </div>
         <div id="statistics_bar" style="height: 250px;"></div>
         <p>Вернуться на <a href="{% url 'finance:accounts_view' %}">главную</a>.</p>
-    </div>
-
     <script>
-        $(document).ready(function () {
+        /*$(document).ready(function () {
             var data = [];
             var statistics = $("#statistics").children();
             for ( i = 0; i < statistics.length; i++ ){
@@ -84,7 +82,7 @@
                     else if(series.key == 'outcome') return "#E65100";
                 }
             });
-        });
+        });*/
 
     </script>
 {% endblock %}

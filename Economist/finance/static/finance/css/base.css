@@ -10,3 +10,7 @@ body {
 footer {
     flex: 0 0 auto;
 }
+
+.tabs .indicator {
+    color: blue;
+}
