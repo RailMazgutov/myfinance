@@ -1,0 +1,35 @@
+{% extends "finance/base.html" %}
+{% block content %}
+<div class="card">
+    <div class="row">
+
+        <form method="POST">
+            {% csrf_token %}
+            <div class="input-field col s8">
+                <i class="material-icons prefix">search</i>
+                <input id="username" type="tel" class="validate">
+                <label for="username">Добавить (Имя пользователя)</label>
+            </div>
+            <div class="col s4">
+            <a class="waves-effect waves-light btn blue darken 1" style="top:13px">Найти</a>
+            </div>
+        </form>
+
+    </div>
+</div>
+<table class="bordered highlight" >
+    <tbody>
+        {% for contact in contacts %}
+        <tr>
+            <td>{% include "finance/elements/contactview.html" with contact=contact %}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<script>
+    $(document).ready(function () {
+
+    })
+</script>
+{% endblock %}

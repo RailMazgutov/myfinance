@@ -7,7 +7,8 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
 
-        <h2>Транзакции по счету {{ account.name }}</h2>
+        <h2>Транзакции по счету: "{{ account.name }}"</h2>
+        <h3>Баланс {{ account.total }}</h3>
         <table class="bordered highlight" >
             <thead>
                 <tr>
@@ -16,7 +17,7 @@
                 </tr>
             </thead>
             <tbody>
-                {% for charge in account.charges.all %}
+                {% for charge in account.charges_ordered %}
                 <tr>
                     <td>{{ charge.value }}</td>
                     <td>{{ charge.date }}</td>
@@ -24,15 +25,11 @@
                 {% endfor %}
             </tbody>
         </table>
-        <div class="row">
-            <div class="col s4">
-                <form method="POST" class="post-form">
-                    {% csrf_token %}
-                    {{ form.as_p }}
-                    <button type="submit" class="save btn btn-default">Добавить</button>
-                </form>
-            </div>
-        </div>
+    <div class="fixed-action-btn horizontal">
+    <a class="btn-floating btn-large blue" id="btn_link">
+      <i class="large material-icons">add</i>
+    </a>
+  </div>
         <div id="statistics">
             {% for statistic in statistics %}
                 {% if statistic.income or statistic.outcome %}
@@ -42,7 +39,48 @@
             {% endfor %}
         </div>
         <div id="statistics_bar" style="height: 250px;"></div>
-        <p>Вернуться на <a href="{% url 'finance:accounts_view' %}">главную</a>.</p>
+
+    <script>
+        $(document).ready(function () {
+            $("#create_form").hide();
+            $("#btn_link").on('click', function () {
+                $("#create_form").fadeIn();
+            });
+            $(document).mousedown(function (e) {
+                var container = $(".post-form");
+                if (!container.is(e.target) // если клик был не по нашему блоку
+                    && container.has(e.target).length === 0) { // и не по его дочерним элементам
+                    $("#create_form").hide();
+                }
+            });
+        })
+    </script>
+
+        <div class="row" id="create_form" style=" width:100%; min-height:100%;
+                overflow:visible;
+                position:fixed;
+                top:0;">
+            <div class="col s4"  style="left: 30%; top:20%; position:fixed;">
+                <div class="card z-depth-2">
+                    <div class="card-header  blue darken-1">
+                        <nav>
+                                <div class="nav-wrapper  blue darken-1">
+                                    <div class="col s12" style="padding-left:30px">
+                                        <a class="breadcrumb  blue darken-1 center-align">Добавить счет</a>
+                                    </div>
+                                </div>
+                            </nav>
+                        </div>
+                    <div class="card-content">
+                    <form method="POST" class="post-form">{% csrf_token %}
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit" class="save btn btn-default blue darken-1">Добавить</button>
+                    </form>
+                        </div>
+                </div>
+            </div>
+        </div>
     <script>
         /*$(document).ready(function () {
             var data = [];

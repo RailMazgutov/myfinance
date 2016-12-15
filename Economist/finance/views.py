@@ -4,25 +4,63 @@ from datetime import date
 
 from django.template import RequestContext
 from django.views.decorators.csrf import csrf_exempt
-from requests import Response
-
-from rest_framework import viewsets
-from rest_framework import serializers, views
 
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 # Create your views here.
 
-from .serializers import AccountSerializer, ChargeSerializer, StatsByMonthSerializer
-from .models import Account, Charge, User
+from .models import Account, Charge, User, Contacts
 from .forms import ChargeForm, AccountForm, ProfileForm, PasswordForm
 from .decorators import security
 
+@login_required
+def add_contacts(request):
+    if request.method == 'POST':
+        user = request.user
+        if not user.contacts:
+            contacts = Contacts()
+            contacts.owner = user
+            contacts.save()
 
+        else:
+            contacts = user.contacts
 
+        try:
+            contact = User.objects.get(pk=request.POST['pk'])
+        except User.DoesNotExist:
+            return HttpResponse(status=404)
+        contacts.add_contact(contact)
+        return HttpResponse(status=200)
 
+@login_required
+def serch_contact(request):
+    if request.method == 'POST':
+        if not 'username' in request.POST:
+            return HttpResponse(status=400)
 
-def accounts(request):
+        username = request.POST['username']
+        try:
+            user = User.objects.get(username=username)
+        except User.DoesNotExist:
+            return HttpResponse(status=404)
+
+        contact = '{"username": "' + user.username + '", "pk":' + user.pk +'}'
+        return HttpResponse(contact, status=200)
+
+@login_required
+def contacts_list(request):
+    user = request.user
+    contacts = Contacts.objects.filter(owner=user)
+    if not contacts.exists():
+        contacts = Contacts()
+        contacts.owner = user
+        contacts.save()
+
+    else:
+        contacts = contacts[0]
+    return render(request, "finance/views/contacts_list.html", {'contacts': contacts.contacts.all()})
+
+def accounts_view(request):
     user = request.user
     if (not user.is_authenticated()):
         context = RequestContext(request,
@@ -76,16 +114,6 @@ def account_details(request, pk):
                   'finance/views/account_details_view.html',
                   {'form': form, 'account': account, 'statistics': statistics})
 
-@login_required
-def profile(request):
-    context = {'name': request.user.username,
-               'password': request.user.password,
-               'address': request.user.address,
-               'email': request.user.email,
-               'accounts': request.user.account.all()
-               }
-    return render(request, 'finance/views/profile.html', context)
-
 
 @login_required
 def profile(request):
@@ -128,6 +156,7 @@ def change_login_password(request):
         if form.is_valid():
             user = form.save(commit=False)
             user.set_password(form.cleaned_data['password'])
+
             user.save()
             user = authenticate(username=form.cleaned_data['username'],
                                 password=form.cleaned_data['password'])

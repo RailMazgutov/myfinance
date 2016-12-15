@@ -1,21 +1,38 @@
 {% load staticfiles %}
 <script type="text/javascript" src="{% static 'finance/js/menu.js' %}"></script>
-<ul class="collection">
+<ul class="collection" style="margin-top: 20px">
     <li class="collection-item"><a href="{% url 'finance:accounts_view' %}">Главная</a></li>
-    <li class="collection-item"><a href="">Счета</a></li>
-    <li>
+    <li class="collection-item"><a href="{% url 'finance:contacts' %}">Контакты</a></li>
+    <li class="collection-item"><a href="{% url 'finance:accounts_view' %}">Все счета</a></li>
+    <li class="collection-item">
         <div class="row">
-            <div class="col s9">
+            <div class="col s12">
+                <a href="{% url 'finance:accounts_view' %}">Счета</a>
                 <ul class="tabs">
-                    <li class="tab col s2"><a class="blue-text active" href="#own_accounts" >Мои</a></li>
-                    <li class="tab col s2"><a class="blue-text" href="#shared">Открытые</a></li>
+                    <li class="tab col s5"><a class="blue-text active" href="#own_accounts" >Мои</a></li>
+                    <li class="tab col s6"><a class="blue-text" href="#shared">Открытые</a></li>
                 </ul>
             </div>
-            <div id="own_accounts" class="col s8">Test 1</div>
-            <div id="shared" class="col s8">Test 2</div>
+            <div id="own_accounts" class="col s12">
+                <ul class="collection">
+                    {% for account in user.account.all %}
+                        <li class="collection-item"><a href="{% url 'finance:account_details' pk=account.pk %}"> {{ account.name }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div id="shared" class="col s11">
+                <ul class="collection">
+                    {% for account in user.shared_accounts.all %}
+                        <li class="collection-item"><a href="{% url 'finance:account_details' pk=account.pk %}"> {{ account.name }}</a></li>
+                    {% endfor %}
+                </ul></div>
         </div>
     </li>
-    <li><div class="divider"></div></li>
-    <li class="collection-item"><a href="{% url 'finance:profile' %}">Настройки</a></li>
 
 </ul>
+<script>
+    $(document).ready(function ()
+    {
+        $(".indicator").addClass("blue darken 1")
+    })
+</script>

@@ -10,7 +10,7 @@ import re
 
 class ChargeForm(forms.ModelForm):
     amount = forms.DecimalField(label = 'Сумма', required = True)
-    transacted_at = forms.DateField(label = 'Дата', required = True, widget=SelectDateWidget(empty_label="Nothing"))
+    transacted_at = forms.DateField(label = 'Дата', required = True)
 
     class Meta:
         model = Charge
@@ -23,7 +23,7 @@ class AccountForm(forms.ModelForm):
     number = forms.CharField(label='Номер счета', max_length=30)
     class Meta:
         model = Account
-        fields = ("_total", "name")
+        fields = ("_total", "name", "number")
 
 
 class ProfileForm(forms.ModelForm):
@@ -54,7 +54,7 @@ class ProfileForm(forms.ModelForm):
 
 class PasswordForm(forms.ModelForm):
     username = forms.CharField(label='Логин', max_length=16, min_length=5)
-    password = forms.CharField(label='Пароль', min_length=8)
+    password = forms.CharField(label='Пароль', min_length=5)
     class Meta:
         model = User
         fields = ("username", "password")
@@ -63,7 +63,7 @@ class PasswordForm(forms.ModelForm):
         username = cleaned_data.get('username')
         password = cleaned_data.get('password')
         if re.fullmatch(r'[a-zA-Z0-9]{5,16}', username):
-            if re.fullmatch(r'[a-zA-Z0-9]{8,}', password):
+            if re.fullmatch(r'[a-zA-Z0-9]{6,}', password):
                 return cleaned_data
             else:
                 self.add_error('password', "Пароль должен состоять только из цифр и латинских букв")

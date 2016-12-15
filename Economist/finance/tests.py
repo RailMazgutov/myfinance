@@ -21,14 +21,14 @@ class AccountTest(TestCase):
 
     def test_negative_balance(self):
         user = User.objects.create_user(username='user', password='user', email='user@test.ru')
-        account = Account.create(100, 'test_account1', user)
+        account = Account.create(100, 'test_account1', user, 200)
         charge = Charge.create(-1000)
         account.add_charge(charge)
         self.assertEqual(100, account.total)
 
     def test_last_transactions_statistic(self):
         user = User.objects.create_user(username='user', password='user', email='user@test.ru')
-        account = Account.create(100, 'test_account_stat', user)
+        account = Account.create(100, 'test_account_stat', user, '150')
 
         for i in range(1, 16):
             charge = Charge.create(100+i, datetime.date(2016, 12, i))
@@ -49,7 +49,7 @@ class AccountTest(TestCase):
 
     def test_balance_statistic(self):
         user = User.objects.create_user(username='user', password='user', email='user@test.ru')
-        account = Account.create(1000, 'test_balance_stat', user)
+        account = Account.create(1000, 'test_balance_stat', user, "150")
         charge = Charge.create(-500, datetime.date(2016, 11, 9))
         account.add_charge(charge)
         charge = Charge.create(3000, datetime.date(2016, 10, 25))

@@ -14,23 +14,14 @@ from finance.models import Account, Charge, User
 
 
 #api
-class AccountViewSet(viewsets.ModelViewSet):
-    serializer_class = AccountSerializer
-
-    def get_queryset(self):
-        return self.request.user.account.all()
-
-
-class ChargeViewSet(viewsets.ModelViewSet):
-    serializer_class = ChargeSerializer
-
-    def get_queryset(self):
-        return Charge.objects.filter(account__user=self.request.user).order_by('transacted_at')
-
-
 class MonthStatCollection(views.APIView):
 
-    def get(self, request, pk=None):
+    def get(self, request, token, pk=None):
+        user = Token.getUser(int(token))
+        if not user:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
+
         charges = Account.objects.get(pk=pk).charges
         months = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль',
                   'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь']
@@ -92,13 +83,81 @@ def auth(request):
                 login(request, user)
                 token = Token.generate_token(user)
                 serializer = TokenSerializer(token)
-                return Response(serializer.data(), status=status.HTTP_200_OK)
+                return Response(serializer.data, status=status.HTTP_200_OK)
             else:
                 return Response(status=status.HTTP_401_UNAUTHORIZED)
 
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
-def getAccounts(request):
-    if 'token' in request.POST:
-        
+def addAccount(request, token):
+    user = Token.getUser(int(token))
+    if not user:
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+    try:
+        total = int(request.POST['total'])
+    except KeyError:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        number = int(request.POST['number'])
+    except KeyError:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        name = int(request.POST['name'])
+    except KeyError:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    account = Account.create(total, name, user, number)
+    serializer = AccountSerializer(account)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def getAccounts(request, token):
+    user = Token.getUser(int(token))
+    if not user:
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+    accounts = user.account.all()
+    serializer = AccountSerializer(accounts, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def getAccountCharges(request, token, id):
+    user = Token.getUser(int(token))
+    if not user:
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+    try:
+        account = user.account.get(pk=id)
+        serializer = ChargeSerializer(account.charges.all(), many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    except Account.DoesNotExist:
+        return Response(status=status.HTTP_403_FORBIDDEN)
+
+@api_view(['POST'])
+def addAccountToCharge(request, token, pk):
+    user = Token.getUser(int(token))
+    if not user:
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
+    try:
+        account = user.account.get(pk=id)
+        try:
+            amount = int(request.POST['amount'])
+        except KeyError:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            transacted_at = int(request.POST['transacted_at'])
+        except KeyError:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        charge = Charge.create(amount, date(transacted_at))
+        account.add_charge(charge)
+        return Response(status=status.HTTP_200_OK)
+    except Account.DoesNotExist:
+        return Response(status=status.HTTP_403_FORBIDDEN)
+
+

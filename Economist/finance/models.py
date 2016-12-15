@@ -54,7 +54,7 @@ class User(AbstractUser):
         return balance_statistic
 
 class Contacts(models.Model):
-    owner = models.OneToOneField(settings.AUTH_USER_MODEL, related_name='contacts')
+    owner = models.OneToOneField(settings.AUTH_USER_MODEL, related_name='contacts_list')
     contacts = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='in_contacts')
 
     def add_contact(self, contact):
@@ -66,8 +66,9 @@ class Account(models.Model):
     _total = models.DecimalField(max_digits=15, decimal_places=2)
     number = models.CharField(max_length=30, unique=True)
     name = models.CharField(max_length=20)
+    onwers = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='shared_accounts')
     @classmethod
-    def create(cls, total, name, user):
+    def create(cls, total, name, user, number):
         account = cls(_total = round(total, 2), name=name, user=user)
         account.save()
         return account
@@ -139,6 +140,10 @@ class Account(models.Model):
     @property
     def total(self):
         return self._total
+
+    @property
+    def charges_ordered(self):
+        return self.charges.order_by('-transacted_at').all()
 
     class Meta:
         db_table = 'account'

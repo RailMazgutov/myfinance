@@ -15,8 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
-from finance.views import auth, register, MonthStatCollection, AccountViewSet, ChargeViewSet
-from rest_framework.routers import DefaultRouter
+from finance.views import auth, register
 
 urlpatterns = [
 
@@ -26,12 +25,5 @@ urlpatterns = [
     url(r'^', include('finance.urls', namespace="finance")),
     url(r'^auth/reg', register, name='register'),
     url(r'^auth/auth', auth, name='auth'),
-    url(r'^api/stats', MonthStatCollection.as_view(), name='get_stats'),
 
 ]
-
-router = DefaultRouter()
-router.register(r'account', AccountViewSet, 'Account')
-urlpatterns += router.urls
-router.register(r'charges', ChargeViewSet, 'Charge')
-urlpatterns += router.urls
