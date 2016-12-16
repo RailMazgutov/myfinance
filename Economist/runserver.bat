@@ -1,3 +1,2 @@
-python manage.py collectstatic --noinput
-python manage.py runserver
+python manage.py runserver 127.0.0.1:8080
 CMD /Q /K

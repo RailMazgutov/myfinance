@@ -1,0 +1,65 @@
+{% extends "finance/base.html" %}
+{% block content %}
+        <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
+    <div class="row">
+        <div class="col s6 m6">
+            <div class="card">
+                <div class="card-content">
+                    <span class="card-title">Последние тразакции</span>
+                    <div class="collection">
+                        {% for charge in user.last_transactions %}
+                            <a class="collection-item">
+                                <p>{{ charge.account.name }}: {{ charge.value }} - {{ charge.date }}</p>
+                            </a>
+                        {%endfor%}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col s6 m6">
+            <div class="card">
+                <div class="card-content">
+                    <span class="card-title">Статистика баланса</span>
+                    <div id="statistics_bar" style="height: 250px;"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div id="statistics">
+        {% for statistic in user.balance_statistic %}
+            <div id="statistic" data-date="{{ statistic.date }}"  data-balance="{{ statistic.balance }}"></div>
+        {% endfor %}
+    </div>
+
+
+
+
+    <script>
+        $(document).ready(function () {
+            var data = [];
+            var statistics = $("#statistics").children();
+            for ( i = 0; i < statistics.length; i++ ){
+                var date = $(statistics[i]).data("month");
+                var balance = $(statistics[i]).data("balance");
+                if (balance) {
+                    balance = parseFloat(balance.replace(/[,]+/g, '.'));
+                } else {
+                    balance = 0;
+                }
+
+                //outcome = parseFloat(outcome.substring(1, outcome.length - 1).replace(/[,]+/g, '.'));
+                var statistic = { date: i, balance: balance};
+                data.push(statistic);
+            }
+            Morris.Line({
+              element: 'statistics_bar',
+              data: data,
+              xkey: 'date',
+              ykeys: ['balance']
+            });
+        });
+
+    </script>
+{% endblock %}

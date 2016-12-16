@@ -7,8 +7,8 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
 
-        <h2>Транзакции по счету: "{{ account.name }}"</h2>
-        <h3>Баланс {{ account.total }}</h3>
+        <h3>Транзакции по счету: "{{ account.name }}"</h3>
+        <h4>Баланс {{ account.total }}</h4>
         <table class="bordered highlight" >
             <thead>
                 <tr>
@@ -66,7 +66,7 @@
                         <nav>
                                 <div class="nav-wrapper  blue darken-1">
                                     <div class="col s12" style="padding-left:30px">
-                                        <a class="breadcrumb  blue darken-1 center-align">Добавить счет</a>
+                                        <a class="breadcrumb  blue darken-1 center-align">Добавить транзакцию</a>
                                     </div>
                                 </div>
                             </nav>
@@ -81,46 +81,5 @@
                 </div>
             </div>
         </div>
-    <script>
-        /*$(document).ready(function () {
-            var data = [];
-            var statistics = $("#statistics").children();
-            for ( i = 0; i < statistics.length; i++ ){
-                var month = $(statistics[i]).data("month");
-                var income = $(statistics[i]).data("income");
-                if (income) {
-                    income = parseFloat(income.replace(/[,]+/g, '.'));
-                } else {
-                    income = 0;
-                }
-                var outcome = $(statistics[i]).data("outcome");
-                if (outcome) {
-                    outcome = -parseFloat(outcome.replace(/[,]+/g, '.'));
-                } else {
-                    outcome = 0;
-                }
-                //outcome = parseFloat(outcome.substring(1, outcome.length - 1).replace(/[,]+/g, '.'));
-                var statistic = { month: month, income: income, outcome: outcome };
-                data.push(statistic);
-            }
-            new Morris.Bar({
-                // ID of the element in which to draw the chart.
-                element: 'statistics_bar',
-                // Chart data records -- each entry in this array corresponds to a point on
-                // the chart.
-                data: data,
-                // The name of the data record attribute that contains x-values.
-                xkey: 'month',
-                ykeys: ['income', 'outcome'],
-                // Labels for the ykeys -- will be displayed when you hover over the
-                // chart.
-                labels: ['Доход', 'Расход'],
-                barColors : function (row, series, type) {
-                    if(series.key == 'income') return "#00C853";
-                    else if(series.key == 'outcome') return "#E65100";
-                }
-            });
-        });*/
 
-    </script>
 {% endblock %}

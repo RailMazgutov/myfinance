@@ -11,7 +11,7 @@
                 <label for="username">Добавить (Имя пользователя)</label>
             </div>
             <div class="col s4">
-            <a class="waves-effect waves-light btn blue darken 1" style="top:13px">Найти</a>
+            <a class="waves-effect waves-light btn blue darken 1" style="top:13px" id="search_contact">Найти</a>
             </div>
         </form>
 
@@ -26,10 +26,53 @@
         {% endfor %}
     </tbody>
 </table>
-
+<div class="row" id="add_form" style=" width:100%; min-height:100%;
+                overflow:visible;
+                position:fixed;
+                top:0;">
+            <div class="col s4"  style="left: 30%; top:20%; position:fixed;">
+                <div class="card z-depth-2">
+                    <div class="card-header  blue darken-1">
+                        <nav>
+                                <div class="nav-wrapper  blue darken-1">
+                                    <div class="col s12" style="padding-left:30px">
+                                        <a class="breadcrumb  blue darken-1 center-align">Добавить контакт</a>
+                                    </div>
+                                </div>
+                            </nav>
+                        </div>
+                    <div class="card-content">
+                    <form method="POST" class="post-form">{% csrf_token %}
+                        {% csrf_token %}
+                        <h3 id="add_contact_text"></h3>
+                        <button type="submit" class="save btn btn-default blue darken-1">Добавить</button>
+                    </form>
+                        </div>
+                </div>
+            </div>
+        </div>
 <script>
     $(document).ready(function () {
-
+        $('#add_form').hide();
+        $("#search_contact").on('click', function () {
+            event.preventDefault();
+            var type = "main_task";
+            $.ajax({
+                type: 'POST',
+                url: '/profile/search_profile',
+                data:{
+                    username:$('#username').val(),
+                    csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()
+                },
+                success:function(contact_json) {
+                    Materialize.toast('Пользователь добавлен', 4000);
+                    location.reload();
+                },
+                error: function () {
+                    Materialize.toast('Пользователь не найден', 4000);
+                }
+            });
+        })
     })
 </script>
 {% endblock %}

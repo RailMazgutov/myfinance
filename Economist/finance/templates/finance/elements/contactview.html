@@ -1,6 +1,10 @@
 {% load staticfiles %}
 <div class="col s12 m12">
     <div class="card">
-            <span>{{ contact.name }} : email {{ contact.email }}</span>
+        <div class="card-content">
+            <span class="card-title">{{ contact.username }}</span>
+
+            <p>Имя пользователя: {{contact.first_name}} {{contact.last_name}}</p>
+        </div>
     </div>
 </div>

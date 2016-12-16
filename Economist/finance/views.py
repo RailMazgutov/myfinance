@@ -14,6 +14,10 @@ from .forms import ChargeForm, AccountForm, ProfileForm, PasswordForm
 from .decorators import security
 
 @login_required
+def stats_view(request):
+    return render(request, "finance/views/stats.html", {'user': request.user})
+
+@login_required
 def add_contacts(request):
     if request.method == 'POST':
         user = request.user
@@ -33,7 +37,7 @@ def add_contacts(request):
         return HttpResponse(status=200)
 
 @login_required
-def serch_contact(request):
+def search_contact(request):
     if request.method == 'POST':
         if not 'username' in request.POST:
             return HttpResponse(status=400)
@@ -44,7 +48,17 @@ def serch_contact(request):
         except User.DoesNotExist:
             return HttpResponse(status=404)
 
-        contact = '{"username": "' + user.username + '", "pk":' + user.pk +'}'
+        contacts = Contacts.objects.filter(owner=request.user)
+        if not contacts.exists():
+            contacts = Contacts()
+            contacts.owner = user
+            contacts.save()
+
+        else:
+            contacts = contacts[0]
+
+        contacts.add_contact(user)
+        contact = '{"username": "' + user.username + '", "pk":' + str(user.pk) +'}'
         return HttpResponse(contact, status=200)
 
 @login_required

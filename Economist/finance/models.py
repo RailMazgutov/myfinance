@@ -28,7 +28,7 @@ class User(AbstractUser):
 
         return acc_statistics
 
-    def last_transactions(self, count):
+    def last_transactions(self, count=5):
         transactions = Charge.objects.filter(account__user = self).order_by('-transacted_at')[:count]
         return transactions
 
@@ -42,7 +42,7 @@ class User(AbstractUser):
 
         for transaction in transactions:
             if not transaction.date == current_date:
-                balance_statistic.append({'date': current_date, 'balance': current_balance})
+                balance_statistic.append({"date": current_date, "balance": current_balance})
                 if len(balance_statistic) == count:
                     return balance_statistic
 
@@ -50,7 +50,8 @@ class User(AbstractUser):
 
             current_balance -= transaction.value
 
-        balance_statistic.append({'date': current_date, 'balance': current_balance})
+        balance_statistic.append({"date": current_date, "balance": current_balance})
+
         return balance_statistic
 
 class Contacts(models.Model):
@@ -83,6 +84,24 @@ class Account(models.Model):
 
     def __iter__(self):
         return self.charges.all().__iter__()
+
+    def stats_by_month(self):
+        months = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль',
+                  'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь']
+        curr_year = date.today().year
+        statistics = []
+        for month in range(1, 13):
+            month_charges = self.charges.filter(transacted_at__month=month, transacted_at__year=curr_year).all()
+            income = 0
+            outcome = 0
+            for charge in month_charges:
+                if charge.value > 0:
+                    income += charge.value
+                else:
+                    outcome += charge.value
+
+            statistic = {'month': months[month - 1], 'income': income, 'outcome': outcome}
+            statistics.append(statistic)
 
     def last_transactions(self, count):
         transactions = self.charges.all().order_by('-transacted_at')[:count]

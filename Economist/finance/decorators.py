@@ -9,7 +9,7 @@ def security(func, *args, **kwargs):
         pk = kwargs['pk']
         user = request.user
         account = Account.objects.get(pk=pk)
-        if account.user == user:
+        if account.user == user or user in account.onwers.all():
             return func(*args, **kwargs)
 
         else:

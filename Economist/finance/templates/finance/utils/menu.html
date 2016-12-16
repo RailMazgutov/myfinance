@@ -1,7 +1,7 @@
 {% load staticfiles %}
 <script type="text/javascript" src="{% static 'finance/js/menu.js' %}"></script>
 <ul class="collection" style="margin-top: 20px">
-    <li class="collection-item"><a href="{% url 'finance:accounts_view' %}">Главная</a></li>
+    <li class="collection-item"><a href="{% url 'finance:stats' %}">Главная</a></li>
     <li class="collection-item"><a href="{% url 'finance:contacts' %}">Контакты</a></li>
     <li class="collection-item"><a href="{% url 'finance:accounts_view' %}">Все счета</a></li>
     <li class="collection-item">
